@@ -6,12 +6,20 @@
  *     https://unlicense.org/
  */
 
+import ij.ImagePlus;
+import io.scif.services.DatasetIOService;
+import net.imagej.Dataset;
 import net.imagej.ImageJ;
 
 import org.scijava.ItemIO;
 import org.scijava.command.Command;
+import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * A very simple plugin.
@@ -33,14 +41,20 @@ import org.scijava.plugin.Plugin;
  * @author Johannes Schindelin
  * @author Curtis Rueden
  */
-@Plugin(type = Command.class, headless = true, menuPath = "Help>Hello, World!")
+@Plugin(type = Command.class, headless = true, menuPath = "Analyze >Identify Neurons")
 public class IdentifyService implements Command {
 
-	@Parameter(label = "What is your name?")
-	private String name = "J. Doe";
+	@Parameter
+	private LogService logService;
+
+	@Parameter
+	private DatasetIOService datasetIOService;
+
+	@Parameter
+	private ImagePlus imagePlus;
 
 	@Parameter(type = ItemIO.OUTPUT)
-	private String greeting;
+	private Dataset image;
 
 	/**
 	 * Produces an output with the well-known "Hello, World!" message. The
@@ -50,7 +64,9 @@ public class IdentifyService implements Command {
 	 */
 	@Override
 	public void run() {
-		greeting = "Hello, " + name + "!";
+
+		System.out.println(Arrays.toString(imagePlus.getDimensions(false)));
+
 	}
 
 	/**
@@ -77,7 +93,7 @@ public class IdentifyService implements Command {
 		ij.launch(args);
 
 		// Launch our "Hello World" command right away.
-		ij.command().run(HelloWorld.class, true);
+		//ij.command().run(IdentifyService.class, true);
 	}
 
 }
