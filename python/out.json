@@ -1,0 +1,14 @@
+{
+  "data": [
+    {
+      "filename": "/home/nathaniel/workspace/imagej/worm-cluster-1/data/27.czi",
+      "slices": "10,11,12,13",
+      "box": "72,77,103,110"
+    },
+    {
+      "filename": "/home/nathaniel/workspace/imagej/worm-cluster-1/data/30.czi",
+      "slices": "8,9,10,11",
+      "box": "122,126,88,94"
+    }
+  ]
+}
