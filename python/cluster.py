@@ -54,6 +54,7 @@ class WormCluster1(object):
             clust.fit(img_arr)
         except ValueError:
             self.cluster_data.append([])
+            print('valueError')
             return -1, [0, 0], [0, 0]
 
         idx = []

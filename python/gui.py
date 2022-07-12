@@ -26,12 +26,7 @@ if __name__ == '__main__':
         t1.start()
 
     def start():
-        wc1_opts = {
-            'factor': 6,
-            'minimum': 3,
-            'min_samples': 20,
-            'xi': 0
-        }
+
 
         try:
             shutil.rmtree(os.path.join(output_folder.get(),'debug'))
@@ -51,6 +46,14 @@ if __name__ == '__main__':
                 czis.append(os.path.join(data_folder.get(), file))
 
         for i,f in enumerate(czis):
+
+            wc1_opts = {
+                'factor': 6,
+                'minimum': 3,
+                'min_samples': 20,
+                'xi': 0
+            }
+
             wc1 = WormCluster1(f, wc1_opts, progress_bar=bar, outfile=os.path.join(output_folder.get(), 'output.json'))
             wc1.run()
 
