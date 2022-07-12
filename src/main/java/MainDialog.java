@@ -421,21 +421,31 @@ public class MainDialog extends JDialog {
         if (imp != null && imp.size() > 0)
             imp.forEach(ImagePlus::close);
 
-        slicesInfo.setText(String.format("%d-%d", mtda.getSliceList().get(0) - 1, mtda.getSliceList().get(mtda.getSliceList().size() - 1) + 3));
+        int startSlice = 0;
+        int endSlice = 3;
+        if (!mtda.getSliceList().isEmpty()) {
+
+            startSlice = mtda.getSliceList().get(0) - 1;
+            endSlice = mtda.getSliceList().get(mtda.getSliceList().size() - 1) + 3;
+
+        }
+        slicesInfo.setText(String.format("%d-%d", startSlice, endSlice));
         fileInfo.setText(mtda.filename.substring(mtda.filename.lastIndexOf('/') + 1));
 
         imp = Arrays.asList(BF.openImagePlus(mtda.filename));
         List<Integer> box = mtda.getBoxList();
+
+        if (!box.isEmpty()) {
 //        roi = new Roi(box.get(0), box.get(2), box.get(1) - box.get(0), box.get(3) - box.get(2));
-        roi = new OvalRoi(box.get(0), box.get(2), box.get(1) - box.get(0), box.get(3) - box.get(2));
-        roi.setStrokeColor(Color.RED);
-        roi.setStrokeWidth(2.0);
-        imp.get(0).setRoi(roi);
+            roi = new OvalRoi(box.get(0), box.get(2), box.get(1) - box.get(0), box.get(3) - box.get(2));
+            roi.setStrokeColor(Color.RED);
+            roi.setStrokeWidth(2.0);
+            imp.get(0).setRoi(roi);
 
-        cb.setState(true);
+            cb.setState(true);
+        }
 
-        List<Integer> slices = mtda.getSliceList();
-        imp.get(0).setPosition(slices.get(slices.size() / 2) * 2 + 1);
+        imp.get(0).setPosition((startSlice + endSlice) + 1);
         imp.get(0).setC(1);
         imp.get(0).setDisplayRange(0, 0);
         imp.get(0).show();
@@ -505,17 +515,25 @@ public class MainDialog extends JDialog {
 
         protected Integer doInBackground() {
 
-           Integer padding = 200;
-           List<Integer> box = mdl.data[curIndex].getBoxList();
-           ImageCanvas canvas = imp.get(0).getCanvas();
-           origRectangle = new Rectangle(canvas.getSrcRect());
-           canvas.setSourceRect(new Rectangle(box.get(0) - padding, box.get(2) - padding, box.get(1) - box.get(0) + (2 * padding), box.get(3) - box.get(2) + (2 * padding)));
-           canvas.setImageUpdated();
-           imp.get(0).updateAndRepaintWindow();
+            Roi t_roi = imp.get(0).getRoi();
+            Rectangle t_rect = t_roi.getBounds();
+            t_rect.height += 200;
+            t_rect.width += 200;
+            t_rect.x -= 100;
+            t_rect.y -= 100;
 
-           zoom.setText("Zoom Out");
+            Integer padding = 200;
+            List<Integer> box = mdl.data[curIndex].getBoxList();
+            ImageCanvas canvas = imp.get(0).getCanvas();
+            origRectangle = new Rectangle(canvas.getSrcRect());
+//            canvas.setSourceRect(new Rectangle(box.get(0) - padding, box.get(2) - padding, box.get(1) - box.get(0) + (2 * padding), box.get(3) - box.get(2) + (2 * padding)));
+            canvas.setSourceRect(t_rect);
+            canvas.setImageUpdated();
+            imp.get(0).updateAndRepaintWindow();
 
-           return 0;
+            zoom.setText("Zoom Out");
+
+            return 0;
 
         }
     }
