@@ -11,7 +11,9 @@ from tqdm import tqdm
 from tkinter.ttk import Progressbar
 from itertools import groupby
 from operator import itemgetter
+from sys import platform
 import json
+import os
 
 class WormCluster1(object):
 
@@ -115,7 +117,12 @@ class WormCluster1(object):
         ax.add_patch(rect)
 
         # plt.show()
-        plt.savefig('{}/debug/{}'.format(self.outfile[:self.outfile.rfind('/')], self.filename[self.filename.rfind('/'):] + '-' + fig_name))
+        if platform == 'win32':
+            fname = os.path.join(self.outfile[:self.outfile.rfind('\\')], 'debug', self.filename[self.filename.rfind('\\')+1:] + '-' + fig_name)
+        else:
+            fname = os.path.join(self.outfile[:self.outfile.rfind('/')], 'debug', self.filename[self.filename.rfind('/')+1:] + '-' + fig_name)
+
+        plt.savefig(fname)
         plt.clf()
 
         return np.sum(clust.labels_ == use_label), tbox_x, tbox_y

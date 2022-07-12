@@ -33,17 +33,25 @@ if __name__ == '__main__':
             'xi': 0
         }
 
-        shutil.rmtree(output_folder.get() + '/debug')
-        os.mkdir(output_folder.get() + '/debug')
-        os.rename(output_folder.get() + '/output.json', output_folder.get() + '/output-bak.json')
+        try:
+            shutil.rmtree(os.path.join(output_folder.get(),'debug'))
+        except:
+            pass
+
+        os.mkdir(os.path.join(output_folder.get(), 'debug'))
+
+        try:
+            os.rename(os.path.join(output_folder.get(), 'output.json'), os.path.join(output_folder.get(), 'output-bak.json'))
+        except:
+            pass
 
         czis = []
         for file in os.listdir(data_folder.get()):
             if file[-3:] == 'czi':
-                czis.append(data_folder.get() + '/' + file)
+                czis.append(os.path.join(data_folder.get(), file))
 
         for i,f in enumerate(czis):
-            wc1 = WormCluster1(f, wc1_opts, progress_bar=bar, outfile=output_folder.get() + '/output.json')
+            wc1 = WormCluster1(f, wc1_opts, progress_bar=bar, outfile=os.path.join(output_folder.get(), 'output.json'))
             wc1.run()
 
             total_bar['value'] = (i+1) / len(czis) * 100
