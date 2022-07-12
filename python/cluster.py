@@ -115,8 +115,7 @@ class WormCluster1(object):
         ax.add_patch(rect)
 
         # plt.show()
-        # plt.savefig('{}/debug/{}'.format(self.outfile[:self.outfile.rfind('/')], self.filename[self.filename.rfind('/'):] + '-' + fig_name))
-        plt.savefig('{}\\debug\\{}'.format(self.outfile[:self.outfile.rfind('\\')], self.filename[self.filename.rfind('\\'):] + '-' + fig_name))
+        plt.savefig('{}/debug/{}'.format(self.outfile[:self.outfile.rfind('/')], self.filename[self.filename.rfind('/'):] + '-' + fig_name))
         plt.clf()
 
         return np.sum(clust.labels_ == use_label), tbox_x, tbox_y
