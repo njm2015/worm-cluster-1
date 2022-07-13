@@ -204,20 +204,21 @@ class WormCluster1(object):
         with open(self.outfile, 'w') as f:
             json.dump(out_json, f)
 
-    def run(self):
+    def run(self, auto_analyze):
         self.read_czi(self.filename)
 
-        for i, slice in enumerate(tqdm(self.slices)):
-            compressed_bw = self.custom_compression(slice)
-            self.compressed_shape = compressed_bw.shape
-            bw_img_idx = np.flip(np.transpose(compressed_bw.nonzero()))
+        if auto_analyze:
+            for i, slice in enumerate(tqdm(self.slices)):
+                compressed_bw = self.custom_compression(slice)
+                self.compressed_shape = compressed_bw.shape
+                bw_img_idx = np.flip(np.transpose(compressed_bw.nonzero()))
 
-            temp_res = self.cluster(bw_img_idx, compressed_bw.shape, '{}.png'.format(i))
-            self.output_n_points[i] = temp_res[0]
-            self.output_boxes[i,:,:] = temp_res[1:]
+                temp_res = self.cluster(bw_img_idx, compressed_bw.shape, '{}.png'.format(i))
+                self.output_n_points[i] = temp_res[0]
+                self.output_boxes[i,:,:] = temp_res[1:]
 
-            if self.progress_bar is not None:
-                self.progress_bar['value'] = (i+1) / len(self.slices) * 100
+                if self.progress_bar is not None:
+                    self.progress_bar['value'] = (i+1) / len(self.slices) * 100
 
         if np.max(self.output_n_points) > 0:
             self.best_slices = self.choose_range()

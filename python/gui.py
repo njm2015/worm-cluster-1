@@ -1,3 +1,4 @@
+import tkinter
 from tkinter import *
 from tkinter.filedialog import *
 from tkinter.ttk import Progressbar
@@ -55,7 +56,7 @@ if __name__ == '__main__':
             }
 
             wc1 = WormCluster1(f, wc1_opts, progress_bar=bar, outfile=os.path.join(output_folder.get(), 'output.json'))
-            wc1.run()
+            wc1.run(auto_analyze.get())
 
             total_bar['value'] = (i+1) / len(czis) * 100
 
@@ -88,14 +89,19 @@ if __name__ == '__main__':
     output_folder_btn = Button(window, text="Choose", command=lambda: choose_output_folder())
     output_folder_btn.grid(column=2, row=1)
 
+    auto_analyze = tkinter.BooleanVar()
+    auto_analyze.set(True)
+    auto_analyze_check_button = tkinter.Checkbutton(window, text="Auto Analyze", variable=auto_analyze, onvalue=True, offvalue=False)
+    auto_analyze_check_button.grid(row=2, pady=20)
+
     start_btn = Button(window, text="Start", width=20, command=lambda: start_thread())
-    start_btn.grid(columnspan=5, row=2, pady=10)
+    start_btn.grid(columnspan=5, row=3, pady=10)
 
     bar = Progressbar(window, length=500)
-    bar.grid(columnspan=5, row=3, pady=10)
+    bar.grid(columnspan=5, row=4, pady=10)
 
     total_bar = Progressbar(window, length=500)
-    total_bar.grid(columnspan=5, row=4, pady=10)
+    total_bar.grid(columnspan=5, row=5, pady=10)
 
 
     def on_closing():
