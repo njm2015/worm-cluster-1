@@ -205,9 +205,10 @@ class WormCluster1(object):
             json.dump(out_json, f)
 
     def run(self, auto_analyze):
-        self.read_czi(self.filename)
-
+        
         if auto_analyze:
+            self.read_czi(self.filename)
+
             for i, slice in enumerate(tqdm(self.slices)):
                 compressed_bw = self.custom_compression(slice)
                 self.compressed_shape = compressed_bw.shape
@@ -220,30 +221,30 @@ class WormCluster1(object):
                 if self.progress_bar is not None:
                     self.progress_bar['value'] = (i+1) / len(self.slices) * 100
 
-        if np.max(self.output_n_points) > 0:
-            self.best_slices = self.choose_range()
-            sorted_slices = sorted(zip(self.output_n_points[self.best_slices].tolist(), self.best_slices), key=lambda x: x[0])
+            if np.max(self.output_n_points) > 0:
+                self.best_slices = self.choose_range()
+                sorted_slices = sorted(zip(self.output_n_points[self.best_slices].tolist(), self.best_slices), key=lambda x: x[0])
 
-            def adjust_box(box):
-                box[0] -= 1
-                box[1] += 1
-                box[2] -= 1
-                box[3] += 1
+                def adjust_box(box):
+                    box[0] -= 1
+                    box[1] += 1
+                    box[2] -= 1
+                    box[3] += 1
 
-                box[0] *= self.opts['factor']
-                box[1] *= self.opts['factor']
-                box[2] *= self.opts['factor']
-                box[3] *= self.opts['factor']
+                    box[0] *= self.opts['factor']
+                    box[1] *= self.opts['factor']
+                    box[2] *= self.opts['factor']
+                    box[3] *= self.opts['factor']
 
-                return box
+                    return box
 
-            self.opts['xi'] = 0.99
-            final_cluster = self.cluster(self.cluster_data[sorted_slices[-1][1]], self.compressed_shape, 'final.png', final=True)
-            self.final_box = adjust_box(final_cluster[1] + final_cluster[2])
+                self.opts['xi'] = 0.99
+                final_cluster = self.cluster(self.cluster_data[sorted_slices[-1][1]], self.compressed_shape, 'final.png', final=True)
+                self.final_box = adjust_box(final_cluster[1] + final_cluster[2])
 
-        else:
-            self.best_slices = []
-            self.final_box = []
+            else:
+                self.best_slices = []
+                self.final_box = []
 
         self.save()
 
