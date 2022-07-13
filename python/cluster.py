@@ -25,6 +25,8 @@ class WormCluster1(object):
         self.output_boxes = None
         self.cluster_data = []
         self.outfile=outfile
+        self.best_slices = []
+        self.final_box = []
 
         if progress_bar is not None:
             self.progress_bar : Progressbar = progress_bar
@@ -205,7 +207,7 @@ class WormCluster1(object):
             json.dump(out_json, f)
 
     def run(self, auto_analyze):
-        
+
         if auto_analyze:
             self.read_czi(self.filename)
 
